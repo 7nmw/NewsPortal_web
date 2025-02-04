@@ -13,9 +13,15 @@ python manage.py runserver
 позже указываемой даты
 
 Созданы страницы создания, редактирования и удаления новостей и статей. Расположены страницы по следующим ссылкам:
+
 /news/create/
+
 /news/<int:pk>/edit/
+
 /news/<int:pk>/delete/
+
 /articles/create/
+
 /articles/<int:pk>/edit/
+
 /articles/<int:pk>/delete/
