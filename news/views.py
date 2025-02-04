@@ -2,10 +2,16 @@
 # что в этом представлении мы будем выводить список объектов из БД
 from datetime import datetime
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, ListView
-from .models import Post
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, ListView, TemplateView
+from .models import Post, Author, User
 from .filters import PostFilter
 from .forms import PostForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic import TemplateView
+from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.views.generic.edit import CreateView
 
 
 class PostList(ListView):
@@ -40,10 +46,11 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class PostCreate(CreateView):
+class PostCreate(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'create.html'
+    permission_required = 'news.add_post' #добавление права создание объекта
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -54,10 +61,11 @@ class PostCreate(CreateView):
         return super().form_valid(form)
 
 
-class PostUpdate(UpdateView):
+class PostUpdate(PermissionRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
+    permission_required = 'news.change_post' #добавление права изменение содержание объекта
 
 
 # Представление удаляющее товар.
